@@ -98,13 +98,7 @@ jobs:
         run: |
           sudo rm -rf /usr/local/lib/android /usr/share/dotnet /opt/ghc
           docker system prune -af
-      
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v4
-        with:
-          role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
-          aws-region: us-east-1
-      
+          
       - name: Show repository identity
         env:
           REPOSITORY: ${{ github.repository }}
@@ -118,6 +112,12 @@ jobs:
           echo "Owner ID: $OWNER_ID"
           echo "Event: $EVENT_NAME"
           echo "Ref: $REF"
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
+          aws-region: us-east-1
 
       - name: Login to Amazon ECR Public
         run: |
