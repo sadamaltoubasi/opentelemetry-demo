@@ -7,18 +7,38 @@ ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
 COPY ["/src/accounting/", "Accounting/"]
 COPY ["/pb/demo.proto", "Accounting/src/protos/demo.proto"]
-RUN dotnet restore "./Accounting/Accounting.csproj" -r linux-$TARGETARCH
+RUN case "$TARGETARCH" in \
+    amd64) RID=linux-x64 ;; \
+    arm64) RID=linux-arm64 ;; \
+    *) echo "Unsupported architecture: $TARGETARCH" >&2; exit 1 ;; \
+    esac && \
+    dotnet restore "./Accounting/Accounting.csproj" -r "$RID"
 WORKDIR "/src/Accounting"
 
-RUN dotnet build "./Accounting.csproj" -r linux-$TARGETARCH -c $BUILD_CONFIGURATION -o /app/build
-
+RUN case "$TARGETARCH" in \
+    amd64) RID=linux-x64 ;; \
+    arm64) RID=linux-arm64 ;; \
+    *) echo "Unsupported architecture: $TARGETARCH" >&2; exit 1 ;; \
+    esac && \
+    dotnet build "./Accounting.csproj" \
+    -r "$RID" \
+    -c "$BUILD_CONFIGURATION" \
+    -o /app/build
 # -----------------------------------------------------------------------------
 
 FROM builder AS publish
 ARG TARGETARCH
 ARG BUILD_CONFIGURATION=Release
-RUN dotnet publish "./Accounting.csproj" -r linux-$TARGETARCH -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
-
+RUN case "$TARGETARCH" in \
+    amd64) RID=linux-x64 ;; \
+    arm64) RID=linux-arm64 ;; \
+    *) echo "Unsupported architecture: $TARGETARCH" >&2; exit 1 ;; \
+    esac && \
+    dotnet publish "./Accounting.csproj" \
+    -r "$RID" \
+    -c "$BUILD_CONFIGURATION" \
+    -o /app/publish \
+    /p:UseAppHost=false
 # -----------------------------------------------------------------------------
 
 FROM mcr.microsoft.com/dotnet/aspnet:10.0.11@sha256:011bb5f30180717b1c8b65822ff2c99bcb96bc65af0164589751b83c7b4949f7
