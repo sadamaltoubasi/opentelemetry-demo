@@ -31,6 +31,7 @@ jobs:
       # Use a non-release tag for PR builds; tags are not pushed when push=false.
       version: ${{ github.event_name == 'push' && 'main' || 'dev' }}
     secrets:
+      AWS_ROLE_ARN: ${{ secrets.AWS_ROLE_ARN }}
       DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
       DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
 
