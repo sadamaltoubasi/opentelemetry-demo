@@ -1,6 +1,6 @@
 # Copyright The OpenTelemetry Authors
 # SPDX-License-Identifier: Apache-2.0
-
+#
 # Full demo layer: adds Kafka-dependent services (accounting, fraud-detection)
 # and patches core services that need Kafka awareness.
 #
