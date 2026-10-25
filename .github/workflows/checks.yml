@@ -24,7 +24,7 @@ jobs:
     permissions:  # required by the reusable workflow
       contents: read  # required by the component-build-images reusable workflow
       packages: write  # required to push built images to GHCR
-      id-token  write  # required to assume the AWS role for ECR pushes
+      id-token: write  # required to assume the AWS role for ECR pushes
     uses: ./.github/workflows/component-build-images.yml
     with:
       push: ${{ github.event_name == 'push' }}
