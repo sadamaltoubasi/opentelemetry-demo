@@ -30,3 +30,4 @@ COPY --from=grpc-health-probe /ko-app/grpc-health-probe /bin/grpc_health_probe
 
 EXPOSE ${CHECKOUT_PORT}
 ENTRYPOINT [ "./checkout" ]
+
